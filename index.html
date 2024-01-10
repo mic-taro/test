@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>SkyWay Tutorial</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        p {
+            color: #555;
+        }
+
+        #my-id {
+            background-color: #8bc34a;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        input[type=text], button {
+            padding: 10px;
+            margin: 5px 0;
+        }
+
+        input[type=text] {
+            width: 70%;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 0 15px -4px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background-color: #8bc34a;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #689f38;
+        }
+
+        .video-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        #local-video {
+            border: 8px solid #8bc34a;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 20px;
+        }
+
+        .channel-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+        }
+
+        .switch input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+        }
+
+        .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        }
+
+        .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        }
+
+        input:checked + .slider {
+        background-color:  #8bc34a;;
+        }
+
+        input:focus + .slider {
+        box-shadow: 0 0 1px  #8bc34a;;
+        }
+
+        input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+        }
+
+        .slider.round {
+        border-radius: 34px;
+        }
+
+        .slider.round:before {
+        border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="container">
+        <h1>demo</h1>
+        <p>ID: <span id="my-id">Your ID</span></p>
+        <div class="channel-group">
+            <input id="channel-name" type="text" placeholder="キーワード" />
+            <button id="join">参加</button>
+        </div>
+
+        <label class="switch">
+            <input type="checkbox" id="videoToggle">
+            <span class="slider round"></span>
+        </label>
+        
+        <p id="status">カメラ OFF</p>
+        <video id="local-video" muted playsinline style="display: none;"></video>
+
+        <div id="remote-media-area"></div>
+
+        <div>
+            <input id="data-stream" type="text" placeholder="メッセージ" />
+            <button id="write">送信</button>
+        </div>
+
+        <div id="button-area"></div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@skyway-sdk/room/dist/skyway_room-latest.js"></script>
+    <script>
+    const { nowInSec, SkyWayAuthToken, SkyWayContext, SkyWayRoom, SkyWayStreamFactory, uuidV4 } = skyway_room;
+
+
+const token = new SkyWayAuthToken({
+jti: uuidV4(),
+iat: nowInSec(),
+exp: nowInSec() + 60 * 60 * 24,
+scope: {
+    app: {
+    id: "e5b9d8b9-ea5a-4363-88e5-c6a752fbab07",
+    turn: true,
+    actions: ['read'],
+    channels: [
+        {
+        id: '*',
+        name: '*',
+        actions: ['write'],
+        members: [
+            {
+            id: '*',
+            name: '*',
+            actions: ['write'],
+            publication: {
+                actions: ['write'],
+            },
+            subscription: {
+                actions: ['write'],
+            },
+            },
+        ],
+
+        sfuBots: [
+            {
+            actions: ['write'],
+            forwardings: [
+                {
+                actions: ['write'],
+                },
+            ],
+            },
+        ],
+        },
+    ],
+    },
+},
+}).encode("oX7Lfr2a7E23p03/CR+/PP+Yv7luE12GhsCWrMFlyOc=");
+
+document.addEventListener('DOMContentLoaded', function() {
+    const videoToggle = document.getElementById('videoToggle');
+    const localVideo = document.getElementById('local-video');
+    const status = document.getElementById('status');
+    
+    videoToggle.addEventListener('change', function() {
+      if (this.checked) {
+        localVideo.style.display = 'block';
+        status.textContent = 'カメラ ON';
+      } else {
+        localVideo.style.display = 'none';
+        status.textContent = 'カメラ OFF';
+      }
+    });
+  });
+ 
+
+(async () => {
+const localVideo = document.getElementById('local-video');
+const buttonArea = document.getElementById('button-area');
+const remoteMediaArea = document.getElementById('remote-media-area');
+const channelNameInput = document.getElementById('channel-name');
+
+const dataStreamInput = document.getElementById('data-stream');
+
+const myId = document.getElementById('my-id');
+const joinButton = document.getElementById('join');
+const writeButton = document.getElementById('write');
+
+const { audio, video } =
+    await SkyWayStreamFactory.createMicrophoneAudioAndCameraStream();
+video.attach(localVideo);
+await localVideo.play();
+
+const data = await SkyWayStreamFactory.createDataStream();
+writeButton.onclick = () => {
+    data.write(dataStreamInput.value);
+    dataStreamInput.value = '';
+};
+
+joinButton.onclick = async () => {
+    if (channelNameInput.value === '') return;
+
+    const context = await SkyWayContext.Create(token);
+    const channel = await SkyWayRoom.FindOrCreate(context, {
+    type: 'p2p',
+    name: channelNameInput.value,
+    });
+    const me = await channel.join();
+
+    myId.textContent = me.id;
+
+    await me.publish(audio);
+    await me.publish(video);
+    await me.publish(data);
+
+    const subscribeAndAttach = (publication) => {
+    if (publication.publisher.id === me.id) return;
+
+    const subscribeButton = document.createElement('button');
+    subscribeButton.textContent = `${publication.publisher.id}: ${publication.contentType}`;
+    buttonArea.appendChild(subscribeButton);
+
+    subscribeButton.onclick = async () => {
+        const { stream } = await me.subscribe(publication.id);
+
+        switch (stream.contentType) {
+        case 'video':
+            {
+            const elm = document.createElement('video');
+            elm.playsInline = true;
+            elm.autoplay = true;
+            stream.attach(elm);
+            remoteMediaArea.appendChild(elm);
+            }
+            break;
+        case 'audio':
+            {
+            const elm = document.createElement('audio');
+            elm.controls = true;
+            elm.autoplay = true;
+            stream.attach(elm);
+            remoteMediaArea.appendChild(elm);
+            }
+            break;
+        case 'data': {
+            const elm = document.createElement('div');
+            remoteMediaArea.appendChild(elm);
+            elm.innerText = 'data\n';
+            stream.onData.add((data) => {
+            elm.innerText += data + '\n';
+            });
+        }
+        }
+    };
+    };
+
+    channel.publications.forEach(subscribeAndAttach);
+    channel.onStreamPublished.add((e) => subscribeAndAttach(e.publication));
+};
+})();
+
+    </script>
+</body>
+
+</html>
