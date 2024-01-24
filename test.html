@@ -145,6 +145,7 @@
             <input id="channel-name" type="text" placeholder="キーワード" />
             <button id="join">参加</button>
             <button id="disconnected">切断1</button>
+            <label id="test">aaaaa</label>
         </div>
         <div id="remote-media-area"></div>
         <div id="button-area"></div>
@@ -226,7 +227,7 @@ const dataStreamInput = document.getElementById('data-stream');
 
 const myId = document.getElementById('my-id');
 const joinButton = document.getElementById('join');
-    disconnectedButton = document.getElementById('disconnected');
+const disconnectedButton = document.getElementById('disconnected');
 
 const writeButton = document.getElementById('write');
 
@@ -303,7 +304,7 @@ joinButton.onclick = async () => {
 };
 
 disconnectedButton.onclick = function(){
-    disconnectedButton.textContent = "a";
+    document.getElementById('test').textContent = "a";
 };
 
 })();
