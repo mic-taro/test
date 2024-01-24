@@ -142,7 +142,7 @@
         <h1>demo</h1>
         <p>ID: <span id="my-id">Your ID</span></p>
         <div class="channel-group">
-            <!-- <input id="channel-name" type="text" placeholder="キーワード" />  -->
+            <input id="channel-name" type="text" placeholder="キーワード" />
             <button id="join">参加</button>
         </div>
 
@@ -234,9 +234,8 @@ document.addEventListener('DOMContentLoaded', function() {
 const localVideo = document.getElementById('local-video');
 const buttonArea = document.getElementById('button-area');
 const remoteMediaArea = document.getElementById('remote-media-area');
-//const channelNameInput = document.getElementById('channel-name');
-const channelNameInput =(HTMLElement)("test");
-    
+const channelNameInput = document.getElementById('channel-name');
+
 const dataStreamInput = document.getElementById('data-stream');
 
 const myId = document.getElementById('my-id');
