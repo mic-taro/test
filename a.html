@@ -144,7 +144,7 @@
         <p>ID: <span id="my-id">Your ID</span></p>
         <div class="channel-group">
             <!-- <input id="channel-name" type="text" placeholder="キーワード" /> -->
-            <button id="join">参加</button>
+            <button id="join">参加１</button>
             <button id="out">終了</button>
         </div>
         
@@ -218,35 +218,35 @@ scope: {
 },
 }).encode("oX7Lfr2a7E23p03/CR+/PP+Yv7luE12GhsCWrMFlyOc=");
 
-document.addEventListener('DOMContentLoaded', function() {
-    const videoToggle = document.getElementById('videoToggle');
-    const localVideo = document.getElementById('local-video');
-    const status = document.getElementById('status');
+// document.addEventListener('DOMContentLoaded', function() {
+//     const videoToggle = document.getElementById('videoToggle');
+//     const localVideo = document.getElementById('local-video');
+//     const status = document.getElementById('status');
     
-    videoToggle.addEventListener('change', function() {
-      if (this.checked) {
-        localVideo.style.display = 'block';
-        status.textContent = 'カメラ ON';
-      } else {
-        localVideo.style.display = 'none';
-        status.textContent = 'カメラ OFF';
-      }
-    });
-  });
+//     videoToggle.addEventListener('change', function() {
+//       if (this.checked) {
+//         localVideo.style.display = 'block';
+//         status.textContent = 'カメラ ON';
+//       } else {
+//         localVideo.style.display = 'none';
+//         status.textContent = 'カメラ OFF';
+//       }
+//     });
+//   });
  
 
 (async () => {
-const localVideo = document.getElementById('local-video');
+// const localVideo = document.getElementById('local-video');
 const buttonArea = document.getElementById('button-area');
-const remoteMediaArea = document.getElementById('remote-media-area');
+// const remoteMediaArea = document.getElementById('remote-media-area');
 // const channelNameInput = document.getElementById('channel-name');
 const roomName = "Test"; //サーバがDBから取得したものを投げてもらったものを使う予定
-const dataStreamInput = document.getElementById('data-stream');
+// const dataStreamInput = document.getElementById('data-stream');
 
 const myId = document.getElementById('my-id');
 const joinButton = document.getElementById('join');
 const outButton = document.getElementById('out');
-const writeButton = document.getElementById('write');
+// const writeButton = document.getElementById('write');
 
 const { audio } = await SkyWayStreamFactory.createMicrophoneAudioAndCameraStream();
 // video.attach(localVideo);
