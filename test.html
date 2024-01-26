@@ -317,8 +317,7 @@ joinButton.onclick = async () => {
 
     //通話終了処理
     outButton.onclick = async () => {   
-      channel.on('close', () => {
-      });
+      channel.close();
     };
 };
 })();
