@@ -142,7 +142,7 @@
         <h1>demo</h1>
         <p>ID: <span id="my-id">Your ID</span></p>
         <div class="channel-group">
-            <input id="channel-name" type="text" placeholder="キーワード" />
+            <!-- <input id="channel-name" type="text" placeholder="キーワード" /> -->
             <button id="join">参加</button>
             <button id="out">終了</button>
         </div>
@@ -235,7 +235,8 @@ document.addEventListener('DOMContentLoaded', function() {
 const localVideo = document.getElementById('local-video');
 const buttonArea = document.getElementById('button-area');
 const remoteMediaArea = document.getElementById('remote-media-area');
-const channelNameInput = document.getElementById('channel-name');
+// const channelNameInput = document.getElementById('channel-name');
+const roomName = "Test";
 const dataStreamInput = document.getElementById('data-stream');
 
 const myId = document.getElementById('my-id');
@@ -259,8 +260,7 @@ joinButton.onclick = async () => {
     const context = await SkyWayContext.Create(token);
     const channel = await SkyWayRoom.FindOrCreate(context, {
     type: 'p2p',
-//    name: channelNameInput.value,
-    name: "test",
+    name: roomName,
     });
     const me = await channel.join();
 
