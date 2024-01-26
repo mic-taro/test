@@ -247,9 +247,9 @@ const joinButton = document.getElementById('join');
 const outButton = document.getElementById('out');
 const writeButton = document.getElementById('write');
 
-const { audio} = await SkyWayStreamFactory.createMicrophoneAudioAndCameraStream();
-video.attach(localVideo);
-await localVideo.play();
+const { audio } = await SkyWayStreamFactory.createMicrophoneAudioAndCameraStream();
+// video.attach(localVideo);
+// await localVideo.play();
 
 const data = await SkyWayStreamFactory.createDataStream();
 writeButton.onclick = () => {
@@ -264,8 +264,8 @@ joinButton.onclick = async () => {
     const channel = await SkyWayRoom.FindOrCreate(context, {
     type: 'p2p',
     name: roomName,
-    // audio : true,
-    // video : false
+    audio : true,
+    video : false
     });
     const me = await channel.join();
 
