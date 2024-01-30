@@ -259,11 +259,6 @@ const { audio } = await SkyWayStreamFactory.createMicrophoneAudioAndCameraStream
 
 joinButton.onclick = async () => {
     // if (channelNameInput.value === '') return;
-    // channel.on('open', () => 
-    // {
-        document.getElementById("status-label").textContent = "発信中です...";
-    // }
-    // );
     const context = await SkyWayContext.Create(token);
     const channel = await SkyWayRoom.FindOrCreate(context, {
     type: 'p2p',
@@ -278,6 +273,12 @@ joinButton.onclick = async () => {
     await me.publish(audio);
     // await me.publish(video);
     // await me.publish(data);
+    
+    channel.on('open', () => 
+    {
+        document.getElementById("status-label").textContent = "発信中です...";
+    }
+    );
 
     const subscribeAndAttach = (publication) => {
     if (publication.publisher.id === me.id) return;
