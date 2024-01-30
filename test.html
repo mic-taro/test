@@ -261,7 +261,7 @@ joinButton.onclick = async () => {
     // if (channelNameInput.value === '') return;
     // channel.on('open', () => 
     // {
-        document.getElementById("status-label").context = "発信中です...";
+        document.getElementById("status-label").textContent = "発信中です...";
     // }
     // );
     const context = await SkyWayContext.Create(token);
