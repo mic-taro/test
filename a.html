@@ -140,7 +140,7 @@
 <body>
     
     <div class="container">
-        <h1 id="status-label">demo1</h1>
+        <h1 id="status-label">demo</h1>
         <label id="Members">0人</label>
         <p>ID: <span id="my-id">Your ID</span></p>
         <div class="channel-group">
@@ -297,13 +297,14 @@
                         // {
                         //     channel.close();
                         // }
-                    };
-                    Members++;
-                    Memberselem.textContent = Members + "人";
-                    if(Members ==2)
+                        if(Members ==2)
                     {
                         statusLabel.textContent = "通話中";
                     }
+                    };
+                    Members++;
+                    Memberselem.textContent = Members + "人";
+
                 };                                        
                 channel.publications.forEach(subscribeAndAttach);
                 channel.onStreamPublished.add((e) => subscribeAndAttach(e.publication));
