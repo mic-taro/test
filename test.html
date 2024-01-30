@@ -259,10 +259,11 @@ const { audio } = await SkyWayStreamFactory.createMicrophoneAudioAndCameraStream
 
 joinButton.onclick = async () => {
     // if (channelNameInput.value === '') return;
-    channel.on('open', () => {
+    // channel.on('open', () => 
+    // {
         document.getElementById("status-label").context = "発信中です...";
-    }
-    );
+    // }
+    // );
     const context = await SkyWayContext.Create(token);
     const channel = await SkyWayRoom.FindOrCreate(context, {
     type: 'p2p',
