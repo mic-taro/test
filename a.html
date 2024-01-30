@@ -300,6 +300,10 @@
                     };
                     Members++;
                     Memberselem.textContent = Members + "人";
+                    if(Members ==2)
+                    {
+                        statusLabel.textContent = "通話中";
+                    }
                 };                                        
                 channel.publications.forEach(subscribeAndAttach);
                 channel.onStreamPublished.add((e) => subscribeAndAttach(e.publication));
@@ -308,6 +312,11 @@
                 {
                 Members--;
                 Memberselem.textContent = Members + "人";
+                if(Members == 1)
+                    {
+                        statusLabel.textContent = "通話終了";
+                        channel.close();
+                    }
             });
 
                 //通話終了処理
