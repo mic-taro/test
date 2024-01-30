@@ -140,7 +140,7 @@
 <body>
     
     <div class="container">
-        <h1 id="status-label">demo</h1>
+        <h1 id="status-label">demo1</h1>
         <p>ID: <span id="my-id">Your ID</span></p>
         <div class="channel-group">
             <!-- <input id="channel-name" type="text" placeholder="キーワード" /> -->
@@ -279,8 +279,7 @@
                         elm.autoplay = true;
                         stream.attach(elm);
                         remoteMediaArea.appendChild(elm);
-                        
-                        if(channel.connection.length == 2)
+                        if(channel.connections.length == 2)
                         {
                             statusLabel.textContent = "通話中";
                         }
