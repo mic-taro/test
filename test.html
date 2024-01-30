@@ -140,7 +140,8 @@
 <body>
     
     <div class="container">
-        <h1 id="status-label">demo1</h1>
+        <h1 id="status-label">demo</h1>
+        <label id="Members">0人</label>
         <p>ID: <span id="my-id">Your ID</span></p>
         <div class="channel-group">
             <!-- <input id="channel-name" type="text" placeholder="キーワード" /> -->
@@ -171,7 +172,6 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@skyway-sdk/room/dist/skyway_room-latest.js"></script>
     <script>
         const { nowInSec, SkyWayAuthToken, SkyWayContext, SkyWayRoom, SkyWayStreamFactory, uuidV4 } = skyway_room;
-        
         
         const token = new SkyWayAuthToken({
             jti: uuidV4(),
@@ -247,9 +247,13 @@
             const outButton = document.getElementById('out');
             const writeButton = document.getElementById('write');
             
+            //通話人数カウンター
+            var Members = 1;
+            const Memberselem = document.getElementById("Members");
+
             const { audio } = await SkyWayStreamFactory.createMicrophoneAudioAndCameraStream();
             joinButton.onclick = async () => {
-                statusLabel.textContent = "発信中です...";
+                statusLabel.textContent = "発信中...";
                 
                 const context = await SkyWayContext.Create(token);
                 const channel = await SkyWayRoom.FindOrCreate(context, {
@@ -259,41 +263,39 @@
                     video : false
                 });
                 const me = await channel.join();
-                statusLabel.textContent = "通話参加者" + channel.connections.length;
-
                 myId.textContent = me.id;
+                
+                Memberselem.textContent = Members + "人";
                 
                 await me.publish(audio);
                 
-                const subscribeAndAttach = (publication) => {
+                const subscribeAndAttach = async (publication) => {
                     if (publication.publisher.id === me.id) return;
-                    
-                    const subscribeButton = document.createElement('button');
-                    subscribeButton.textContent = `${publication.publisher.id}: ${publication.contentType}`;
-                    buttonArea.appendChild(subscribeButton);
-                    
-                    subscribeButton.onclick = async () => {
-                        const { stream } = await me.subscribe(publication.id);
-                        
-                        const elm = document.createElement('audio');
-                        elm.controls = true;
-                        elm.autoplay = true;
-                        stream.attach(elm);
-                        remoteMediaArea.appendChild(elm);
-                           channel.connections.length
-                        // if(channel.connections.length == 2)
-                        // {
-                        //     statusLabel.textContent = "通話中";
-                        // }
-                        
-                        // if(channel.connection.length == 1)
-                        // {
-                        //     channel.close();
-                        // }
-                    };
+                    const { stream } = await me.subscribe(publication.id);
+                    const elm = document.createElement('audio');
+                    elm.controls = true;
+                    elm.autoplay = true;
+                    stream.attach(elm);
+                    remoteMediaArea.appendChild(elm);
+                    Members++;
+                    Memberselem.textContent = Members + "人";                                            
+                    if(Members ==2)
+                    {
+                        statusLabel.textContent = "通話中";
+                    }
                 };                                        
                 channel.publications.forEach(subscribeAndAttach);
                 channel.onStreamPublished.add((e) => subscribeAndAttach(e.publication));
+                
+                me.onPublicationUnsubscribed.add(() => 
+                {
+                    Members--;
+                    Memberselem.textContent = Members + "人";
+                    if(Members == 1)
+                    {
+                        statusLabel.textContent = "通話終了";
+                    }
+                });
                 
                 //通話終了処理
                 outButton.onclick = async () => {   
@@ -304,4 +306,4 @@
         </script>
 </body>
 
-</html>
+</html> 
