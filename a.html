@@ -272,39 +272,27 @@
 
                 await me.publish(audio);
                 
-                const subscribeAndAttach = (publication) => {
+                const subscribeAndAttach = async (publication) => {
                     if (publication.publisher.id === me.id) return;
                     
-                    const subscribeButton = document.createElement('button');
-                    subscribeButton.textContent = `${publication.publisher.id}: ${publication.contentType}`;
-                    buttonArea.appendChild(subscribeButton);
+                    // const subscribeButton = document.createElement('button');
+                    // subscribeButton.textContent = `${publication.publisher.id}: ${publication.contentType}`;
+                    // buttonArea.appendChild(subscribeButton);
                     
-                    subscribeButton.onclick = async () => {
+                    // subscribeButton.onclick = async () => {
                         const { stream } = await me.subscribe(publication.id);
-                        
                         const elm = document.createElement('audio');
                         elm.controls = true;
                         elm.autoplay = true;
                         stream.attach(elm);
                         remoteMediaArea.appendChild(elm);
-                           channel.connections.length
-                        // if(channel.connections.length == 2)
-                        // {
-                        //     statusLabel.textContent = "通話中";
-                        // }
-                        
-                        // if(channel.connection.length == 1)
-                        // {
-                        //     channel.close();
-                        // }
-                        if(Members ==2)
-                    {
-                        statusLabel.textContent = "通話中";
-                    }
-                    };
+                    //};
                     Members++;
-                    Memberselem.textContent = Members + "人";
-
+                    Memberselem.textContent = Members + "人";                                            
+                    if(Members ==2)
+                        {
+                            statusLabel.textContent = "通話中";
+                        }
                 };                                        
                 channel.publications.forEach(subscribeAndAttach);
                 channel.onStreamPublished.add((e) => subscribeAndAttach(e.publication));
