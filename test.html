@@ -242,7 +242,7 @@
             const roomName = "Test"; //サーバがDBから取得したものを投げてもらったものを使う予定
             const dataStreamInput = document.getElementById('data-stream');
             
-            const myId = document.getElementById('my-id');
+            // const myId = document.getElementById('my-id');
             const joinButton = document.getElementById('join');
             const outButton = document.getElementById('out');
             const writeButton = document.getElementById('write');
@@ -263,7 +263,7 @@
                     video : false
                 });
                 const me = await channel.join();
-                myId.textContent = me.id;
+                // myId.textContent = me.id;
                 
                 Memberselem.textContent = Members + "人";
                 
