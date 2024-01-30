@@ -140,7 +140,7 @@
 <body>
     
     <div class="container">
-        <h1>demo</h1>
+        <h1 id="status-label">demo</h1>
         <p>ID: <span id="my-id">Your ID</span></p>
         <div class="channel-group">
             <!-- <input id="channel-name" type="text" placeholder="キーワード" /> -->
@@ -259,7 +259,10 @@ const { audio } = await SkyWayStreamFactory.createMicrophoneAudioAndCameraStream
 
 joinButton.onclick = async () => {
     // if (channelNameInput.value === '') return;
-
+    channel.on('open', () => {
+        document.getElementById("status-label").context = "発信中です...";
+    }
+    );
     const context = await SkyWayContext.Create(token);
     const channel = await SkyWayRoom.FindOrCreate(context, {
     type: 'p2p',
