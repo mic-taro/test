@@ -259,7 +259,8 @@
                     video : false
                 });
                 const me = await channel.join();
-                
+                statusLabel.textContent = "通話参加者" + channel.connections.length;
+
                 myId.textContent = me.id;
                 
                 await me.publish(audio);
@@ -279,10 +280,11 @@
                         elm.autoplay = true;
                         stream.attach(elm);
                         remoteMediaArea.appendChild(elm);
-                        if(channel.connections.length == 2)
-                        {
-                            statusLabel.textContent = "通話中";
-                        }
+                           channel.connections.length
+                        // if(channel.connections.length == 2)
+                        // {
+                        //     statusLabel.textContent = "通話中";
+                        // }
                         
                         // if(channel.connection.length == 1)
                         // {
