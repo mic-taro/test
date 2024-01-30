@@ -315,13 +315,7 @@ joinButton.onclick = async () => {
         //     });
         // }
         // }
-    };
-    };
-
-    channel.publications.forEach(subscribeAndAttach);
-    channel.onStreamPublished.add((e) => subscribeAndAttach(e.publication));
-    
-    let peerCount = 0;
+        let peerCount = 0;
     channel.on('peerJoin', peerId => {
         peerCount++;
         if(peerCount == 2)
@@ -338,7 +332,11 @@ joinButton.onclick = async () => {
             channel.close();
         }
     });
-    
+    };
+    };
+
+    channel.publications.forEach(subscribeAndAttach);
+    channel.onStreamPublished.add((e) => subscribeAndAttach(e.publication));
     
     //通話終了処理
     outButton.onclick = async () => {   
