@@ -140,7 +140,7 @@
 <body>
     
     <div class="container">
-        <h1 id="status-label">demo</h1>
+        <h1 id="status-label">通話画面</h1>
         <label id="Members">0人</label>
         <br></br>
         <!-- <p>ID: <span id="my-id">Your ID</span></p> -->
@@ -173,7 +173,12 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@skyway-sdk/room/dist/skyway_room-latest.js"></script>
     <script>
         const { nowInSec, SkyWayAuthToken, SkyWayContext, SkyWayRoom, SkyWayStreamFactory, uuidV4 } = skyway_room;
-        
+
+        // URLを取得
+    let url = new URL(window.location.href);
+    // URLSearchParamsオブジェクトを取得
+    let params = url.searchParams;
+
         const token = new SkyWayAuthToken({
             jti: uuidV4(),
             iat: nowInSec(),
@@ -240,7 +245,7 @@
             const localVideo = document.getElementById('local-video');
             const buttonArea = document.getElementById('button-area');
             const remoteMediaArea = document.getElementById('remote-media-area');
-            const roomName = "Test"; //サーバがDBから取得したものを投げてもらったものを使う予定
+            const roomName = params.get('room'); //サーバがDBから取得したものを投げてもらったものを使う予定
             const dataStreamInput = document.getElementById('data-stream');
             
             // const myId = document.getElementById('my-id');
