@@ -310,11 +310,13 @@
                 
                 //通話終了処理
                 outButton.onclick = async () => {   
-                    Members--;
                     channel.close();
                 };
             };
         })();
+        outButton.onclick = async () => {   
+                    Members--;
+                };
         </script>
 </body>
 
