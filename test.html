@@ -147,7 +147,7 @@
         <div class="channel-group">
             <!-- <input id="channel-name" type="text" placeholder="キーワード" /> -->
             <button id="join">参加</button>
-            <button id="out">終了</button>
+            <button id="out" disabled>終了</button>
         </div>
 
         <br></br>
@@ -260,6 +260,8 @@
             const { audio } = await SkyWayStreamFactory.createMicrophoneAudioAndCameraStream();
             joinButton.onclick = async () => {
                 statusLabel.textContent = "発信中...";
+                joinButton.disabled = "disabled";
+                outButton.disabled = null;
                 
                 const context = await SkyWayContext.Create(token);
                 const channel = await SkyWayRoom.FindOrCreate(context, {
