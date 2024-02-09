@@ -143,6 +143,8 @@
         <h1 id="status-label">通話画面</h1>
         <label id="Members">0人</label>
         <br></br>
+        部屋名：<label id="roomname"></label>        
+        <br></br>
         <!-- <p>ID: <span id="my-id">Your ID</span></p> -->
         <div class="channel-group">
             <!-- <input id="channel-name" type="text" placeholder="キーワード" /> -->
@@ -241,6 +243,7 @@
         
         
         (async () => {
+            const roomnameLabel= document.getElementById('roomname');
             const statusLabel= document.getElementById('status-label');
             const localVideo = document.getElementById('local-video');
             const buttonArea = document.getElementById('button-area');
@@ -256,7 +259,7 @@
             //通話人数カウンター
             var Members = 1;
             const Memberselem = document.getElementById("Members");
-
+            roomnameLabel.textContent = roomName;
             const { audio } = await SkyWayStreamFactory.createMicrophoneAudioAndCameraStream();
             joinButton.onclick = async () => {
                 statusLabel.textContent = "発信中...";
