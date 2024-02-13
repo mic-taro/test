@@ -149,10 +149,11 @@
         <div class="channel-group">
             <!-- <input id="channel-name" type="text" placeholder="キーワード" /> -->
             <button id="join">参加</button>
-            <button id="out" disabled>終了</button>
+            <button id="out">終了</button>
         </div>
 
         <br></br>
+        <button id="test_button">リクエスト</button>
 
         <!-- <label class="switch">
             <input type="checkbox" id="videoToggle">
@@ -174,12 +175,31 @@
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@skyway-sdk/room/dist/skyway_room-latest.js"></script>
     <script>
+        function sendHttpRequest() {
+            const xhr = new XMLHttpRequest();
+            const url = 'http://192.168.82.110:8080/hochan/api/CallOperator';
+            const body = '{"device_name":"#001"}';
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('x-api-key','Bearer abcde12345');
+            xhr.onreadystatechange = function() {
+                if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    console.log(xhr.responseText);
+                }
+            }
+            xhr.send(body);
+        }
+        const testButton = document.getElementById('test_button');
+        testButton.onclick = async () => 
+        {   
+            sendHttpRequest();
+        };
+        
         const { nowInSec, SkyWayAuthToken, SkyWayContext, SkyWayRoom, SkyWayStreamFactory, uuidV4 } = skyway_room;
-
+        
         // URLを取得
-    let url = new URL(window.location.href);
-    // URLSearchParamsオブジェクトを取得
-    let params = url.searchParams;
+        let url = new URL(window.location.href);
+        // URLSearchParamsオブジェクトを取得
+        let params = url.searchParams;
 
         const token = new SkyWayAuthToken({
             jti: uuidV4(),
