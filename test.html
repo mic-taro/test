@@ -153,7 +153,7 @@
         </div>
 
         <br></br>
-        <button id="test_button">リクエスト</button>
+        <button id="test_button">aリクエスト</button>
 
         <!-- <label class="switch">
             <input type="checkbox" id="videoToggle">
@@ -176,21 +176,6 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@skyway-sdk/room/dist/skyway_room-latest.js"></script>
     <script>
         const testButton = document.getElementById('test_button');
-        testButton.onclick = async () => 
-        {   
-            testButton.context = "aaaaaaa";
-            const xhr = new XMLHttpRequest();
-            const url = 'http://192.168.82.110:8080/test';
-            const body = '{"device_name":"#001"}';
-            xhr.open('POST', url, true);
-            xhr.setRequestHeader('x-api-key','Bearer abcde12345');
-            xhr.onreadystatechange = function() {
-                if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                    console.log(xhr.responseText);
-                }
-            }
-            xhr.send(body);
-        };
         
         const { nowInSec, SkyWayAuthToken, SkyWayContext, SkyWayRoom, SkyWayStreamFactory, uuidV4 } = skyway_room;
         
@@ -280,6 +265,23 @@
             roomnameLabel.textContent = roomName;
             const { audio } = await SkyWayStreamFactory.createMicrophoneAudioAndCameraStream();
             joinButton.onclick = async () => {
+
+                
+            testButton.context = "aaaaaaa";
+            const xhr = new XMLHttpRequest();
+            const url = 'http://192.168.82.110:8080/test';
+            const body = '{"device_name":"#001"}';
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('x-api-key','Bearer abcde12345');
+            xhr.onreadystatechange = function() {
+                if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    console.log(xhr.responseText);
+                }
+            }
+            xhr.send(body);
+
+
+                
                 statusLabel.textContent = "発信中...";
                 joinButton.disabled = "disabled";
                 outButton.disabled = null;
