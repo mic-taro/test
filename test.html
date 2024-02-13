@@ -300,9 +300,9 @@
                 
                 me.onPublicationUnsubscribed.add(() => 
                 {
-                    Members--;
+                    Members = Members -2;
                     Memberselem.textContent = Members + "人";
-                    if(Members == 1)
+                    if(Members == 0)
                     {
                         statusLabel.textContent = "通話終了";
                     }
@@ -314,9 +314,6 @@
                 };
             };
         })();
-        outButton.onclick = async () => {   
-                    Members--;
-                };
         </script>
 </body>
 
