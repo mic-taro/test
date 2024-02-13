@@ -175,7 +175,14 @@
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@skyway-sdk/room/dist/skyway_room-latest.js"></script>
     <script>
+<<<<<<< HEAD
+            import cors from 'cors';
+                app.use(cors());
         function sendHttpRequest() {
+            
+=======
+        function sendHttpRequest() {
+>>>>>>> e6592365f69806a91d545d01bb3a0d367aa04d2b
             const xhr = new XMLHttpRequest();
             const url = 'http://192.168.82.110:8080/hochan/api/CallOperator';
             const body = '{"device_name":"#001"}';

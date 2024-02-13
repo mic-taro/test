@@ -7,19 +7,21 @@
 <body>
   <button onclick="sendHttpRequest()">HTTPリクエスト送信</button>
   <script>
-    function sendHttpRequest() {
-      const xhr = new XMLHttpRequest();
-      const url = 'http://192.168.82.110:8080/CallOperator';
-      const body = '{"device name":"#001"}';
-      xhr.open('POST', url, true);
-      xhr.setRequestHeader('x-api-key','test_api_key');
-      xhr.onreadystatechange = function() {
-        if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-          console.log(xhr.responseText);
+            import cors from 'cors';
+                app.use(cors());
+        function sendHttpRequest() {
+            const xhr = new XMLHttpRequest();
+            const url = 'http://192.168.82.110:8080/hochan/api/CallOperator';
+            const body = '{"device_name": "#007"}';
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('x-api-key','Bearer abcde12345');
+            xhr.onreadystatechange = function() {
+                if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    console.log(xhr.responseText);
+                }
+            }
+            xhr.send(body);
         }
-      }
-      xhr.send(body);
-    }
   </script>
 </body>
 </html>
