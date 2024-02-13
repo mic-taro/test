@@ -175,8 +175,10 @@
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@skyway-sdk/room/dist/skyway_room-latest.js"></script>
     <script>
-        function sendHttpRequest() {
-            
+        const testButton = document.getElementById('test_button');
+        testButton.onclick = async () => 
+        {   
+            testButton.context = "aaaaaaa";
             const xhr = new XMLHttpRequest();
             const url = 'http://192.168.82.110:8080/test';
             const body = '{"device_name":"#001"}';
@@ -188,11 +190,6 @@
                 }
             }
             xhr.send(body);
-        }
-        const testButton = document.getElementById('test_button');
-        testButton.onclick = async () => 
-        {   
-            sendHttpRequest();
         };
         
         const { nowInSec, SkyWayAuthToken, SkyWayContext, SkyWayRoom, SkyWayStreamFactory, uuidV4 } = skyway_room;
