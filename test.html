@@ -304,8 +304,9 @@
             testButton.onclick = async () => 
             {   
                 const xhr = new XMLHttpRequest();
-                const url = 'http://192.168.82.110:8080/hochan/skyway/UpdateCallStatus';
-                const body = '{"ID": ' + IDLabel.textContent + '}';
+                const url = 'https://192.168.82.110:443/skyway/UpdateCallStatus';
+                // const body = '{"ID": ' + IDLabel.textContent + '}';
+                const body = '{"ID": 11}';
                 xhr.open('POST', url, true);
                 xhr.setRequestHeader('Content-Type','application/json');
                 xhr.setRequestHeader('x-api-key','Bearer abcde12345');
