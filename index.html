@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
-    
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width" />
-        <title>SkyWay Tutorial</title>
-        <style>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>SkyWay Tutorial</title>
+    <style>
         body {
             background-color: #f5f5f5;
             font-family: Arial, sans-serif;
@@ -72,7 +72,6 @@
 
         .channel-group {
             display: flex;
-            display: inline-block;
             gap: 10px;
         }
 
@@ -140,187 +139,183 @@
 <body>
     
     <div class="container">
-        <h1 id="status-label">通話画面</h1>
-        <label id="Members">0人</label>
-        <br></br>
-        部屋名：<label id="roomname">test</label>        
-        <br></br>
-        ID：<label id="ID">11</label>        
-        <br></br>
+        <h1>demo</h1>
+        <p>ID: <span id="my-id">Your ID</span></p>
         <div class="channel-group">
+            <input id="channel-name" type="text" placeholder="キーワード" />
             <button id="join">参加</button>
-            <button id="out">終了</button>
         </div>
+
+        <label class="switch">
+            <input type="checkbox" id="videoToggle">
+            <span class="slider round"></span>
+        </label>
         
-        <br></br>
-        <button id="test_button">リクエスト</button>
+        <p id="status">カメラ OFF</p>
+        <video id="local-video" muted playsinline style="display: none;"></video>
+
         <div id="remote-media-area"></div>
+
+        <div>
+            <input id="data-stream" type="text" placeholder="メッセージ" />
+            <button id="write">送信</button>
+        </div>
+
         <div id="button-area"></div>
     </div>
-    
+
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@skyway-sdk/room/dist/skyway_room-latest.js"></script>
     <script>
-        const { nowInSec, SkyWayAuthToken, SkyWayContext, SkyWayRoom, SkyWayStreamFactory, uuidV4 } = skyway_room ;
-        // URLを取得
-        let url = new URL(window.location.href);
-        // URLSearchParamsオブジェクトを取得
-        let params = url.searchParams;
-        
-        const token = new SkyWayAuthToken({
-            jti: uuidV4(),
-            iat: nowInSec(),
-            exp: nowInSec() + 60 * 60 * 24,
-            scope: {
-                app: {
-                    id: "e5b9d8b9-ea5a-4363-88e5-c6a752fbab07",
-                    turn: true,
-                    actions: ['read'],
-                    channels: [
-                        {
-                            id: '*',
-                            name: '*',
-                            actions: ['write'],
-                            members: [
-                                {
-                                    id: '*',
-                                    name: '*',
-                                    actions: ['write'],
-                                    publication: {
-                                        actions: ['write'],
-                                    },
-                                    subscription: {
-                                        actions: ['write'],
-                                    },
-                                },
-                            ],
-                            
-                            sfuBots: [
-                                {
-                                    actions: ['write'],
-                                    forwardings: [
-                                        {
-                                            actions: ['write'],
-                                        },
-                                    ],
-                                },
-                            ],
-                        },
-                    ],
-                },
-            },
-        }).encode("oX7Lfr2a7E23p03/CR+/PP+Yv7luE12GhsCWrMFlyOc=");
-        
-        document.addEventListener('DOMContentLoaded', function() 
+    const { nowInSec, SkyWayAuthToken, SkyWayContext, SkyWayRoom, SkyWayStreamFactory, uuidV4 } = skyway_room;
+
+
+const token = new SkyWayAuthToken({
+jti: uuidV4(),
+iat: nowInSec(),
+exp: nowInSec() + 60 * 60 * 24,
+scope: {
+    app: {
+    id: "e5b9d8b9-ea5a-4363-88e5-c6a752fbab07",
+    turn: true,
+    actions: ['read'],
+    channels: [
         {
-            const videoToggle = document.getElementById('videoToggle');
-            const localVideo = document.getElementById('local-video');
-            const status = document.getElementById('status');
-            
-            videoToggle.addEventListener('change', function() 
+        id: '*',
+        name: '*',
+        actions: ['write'],
+        members: [
             {
-                if (this.checked) 
+            id: '*',
+            name: '*',
+            actions: ['write'],
+            publication: {
+                actions: ['write'],
+            },
+            subscription: {
+                actions: ['write'],
+            },
+            },
+        ],
+
+        sfuBots: [
+            {
+            actions: ['write'],
+            forwardings: [
                 {
-                    localVideo.style.display = 'block';
-                    status.textContent = 'カメラ ON';
-                } else {
-                    localVideo.style.display = 'none';
-                    status.textContent = 'カメラ OFF';
-                }
+                actions: ['write'],
+                },
+            ],
+            },
+        ],
+        },
+    ],
+    },
+},
+}).encode("oX7Lfr2a7E23p03/CR+/PP+Yv7luE12GhsCWrMFlyOc=");
+
+document.addEventListener('DOMContentLoaded', function() {
+    const videoToggle = document.getElementById('videoToggle');
+    const localVideo = document.getElementById('local-video');
+    const status = document.getElementById('status');
+    
+    videoToggle.addEventListener('change', function() {
+      if (this.checked) {
+        localVideo.style.display = 'block';
+        status.textContent = 'カメラ ON';
+      } else {
+        localVideo.style.display = 'none';
+        status.textContent = 'カメラ OFF';
+      }
+    });
+  });
+ 
+
+(async () => {
+const localVideo = document.getElementById('local-video');
+const buttonArea = document.getElementById('button-area');
+const remoteMediaArea = document.getElementById('remote-media-area');
+const channelNameInput = document.getElementById('channel-name');
+
+const dataStreamInput = document.getElementById('data-stream');
+
+const myId = document.getElementById('my-id');
+const joinButton = document.getElementById('join');
+const writeButton = document.getElementById('write');
+
+const { audio, video } =
+    await SkyWayStreamFactory.createMicrophoneAudioAndCameraStream();
+video.attach(localVideo);
+await localVideo.play();
+
+const data = await SkyWayStreamFactory.createDataStream();
+writeButton.onclick = () => {
+    data.write(dataStreamInput.value);
+    dataStreamInput.value = '';
+};
+
+joinButton.onclick = async () => {
+    if (channelNameInput.value === '') return;
+
+    const context = await SkyWayContext.Create(token);
+    const channel = await SkyWayRoom.FindOrCreate(context, {
+    type: 'p2p',
+    name: channelNameInput.value,
+    });
+    const me = await channel.join();
+
+    myId.textContent = me.id;
+
+    await me.publish(audio);
+    await me.publish(video);
+    await me.publish(data);
+
+    const subscribeAndAttach = (publication) => {
+    if (publication.publisher.id === me.id) return;
+
+    const subscribeButton = document.createElement('button');
+    subscribeButton.textContent = `${publication.publisher.id}: ${publication.contentType}`;
+    buttonArea.appendChild(subscribeButton);
+
+    subscribeButton.onclick = async () => {
+        const { stream } = await me.subscribe(publication.id);
+
+        switch (stream.contentType) {
+        case 'video':
+            {
+            const elm = document.createElement('video');
+            elm.playsInline = true;
+            elm.autoplay = true;
+            stream.attach(elm);
+            remoteMediaArea.appendChild(elm);
+            }
+            break;
+        case 'audio':
+            {
+            const elm = document.createElement('audio');
+            elm.controls = true;
+            elm.autoplay = true;
+            stream.attach(elm);
+            remoteMediaArea.appendChild(elm);
+            }
+            break;
+        case 'data': {
+            const elm = document.createElement('div');
+            remoteMediaArea.appendChild(elm);
+            elm.innerText = 'data\n';
+            stream.onData.add((data) => {
+            elm.innerText += data + '\n';
             });
-        });
-        
-        
-        (async () => {
-            const roomnameLabel= document.getElementById('roomname');
-            const IDLabel= document.getElementById('ID');
-            const statusLabel= document.getElementById('status-label');
-            const localVideo = document.getElementById('local-video');
-            const buttonArea = document.getElementById('button-area');
-            const remoteMediaArea = document.getElementById('remote-media-area');
-            const dataStreamInput = document.getElementById('data-stream');
-            
-            const joinButton = document.getElementById('join');
-            const outButton = document.getElementById('out');
-            const writeButton = document.getElementById('write');
-            
-            //通話人数カウンター
-            var Members = 1;
-            const Memberselem = document.getElementById("Members");
-            const { audio } = await SkyWayStreamFactory.createMicrophoneAudioAndCameraStream();
-            joinButton.onclick = async () => {
-                statusLabel.textContent = "発信中...";
-                
-                const context = await SkyWayContext.Create(token);
-                const channel = await SkyWayRoom.FindOrCreate(context, {
-                    type: 'p2p',
-                    name: roomnameLabel.textContent,
-                    audio : true,
-                    video : false
-                });
-                const me = await channel.join();
-                
-                Memberselem.textContent = Members + "人";
-                
-                await me.publish(audio);
-                
-                const subscribeAndAttach = async (publication) => {
-                    if (publication.publisher.id === me.id) return;
-                    const { stream } = await me.subscribe(publication.id);
-                    const elm = document.createElement('audio');
-                    elm.controls = true;
-                    elm.autoplay = true;
-                    stream.attach(elm);
-                    remoteMediaArea.appendChild(elm);
-                    Members++;
-                    Memberselem.textContent = Members + "人";                                            
-                    if(Members ==2)
-                    {
-                        statusLabel.textContent = "通話中";
-                    }
-                };                                        
-                channel.publications.forEach(subscribeAndAttach);
-                channel.onStreamPublished.add((e) => subscribeAndAttach(e.publication));
-                
-                me.onPublicationUnsubscribed.add(() => 
-                {
-                    Members = Members -2;
-                    Memberselem.textContent = Members + "人";
-                    if(Members == 0)
-                    {
-                        statusLabel.textContent = "通話終了";
-                    }
-                });
-                
-                //通話終了処理
-                outButton.onclick = async () => {   
-                    channel.close();
-                };
-            };
-        })();
-        </script>
-        <script>
-            const IDLabel= document.getElementById('ID');
-            const testButton = document.getElementById('test_button');
-            testButton.onclick = async () => 
-            {   
-                const xhr = new XMLHttpRequest();
-                const url = 'https://192.168.82.110:443/skyway/UpdateCallStatus';
-                // const body = '{"ID": ' + IDLabel.textContent + '}';
-                const body = '{"ID": 11}';
-                xhr.open('POST', url, true);
-                xhr.setRequestHeader('Content-Type','application/json');
-                xhr.setRequestHeader('x-api-key','Bearer abcde12345');
-                xhr.send(body);
-                xhr.onreadystatechange = function() 
-                {
-                    if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) 
-                    {
-                        console.log("成功");
-                    }
-                    console.log(xhr.status + xhr.responseText);
-                }             
-            };
-            </script>
+        }
+        }
+    };
+    };
+
+    channel.publications.forEach(subscribeAndAttach);
+    channel.onStreamPublished.add((e) => subscribeAndAttach(e.publication));
+};
+})();
+
+    </script>
 </body>
 
-</html> 
+</html>
