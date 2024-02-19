@@ -56,7 +56,7 @@
             background-color: #689f38;
         }
 
-        .video-container {
+        /* .video-container {
             display: flex;
             justify-content: center;
             gap: 20px;
@@ -68,7 +68,7 @@
             width: 100%;
             max-width: 400px;
             margin-top: 20px;
-        }
+        } */
 
         .channel-group {
             display: flex;
@@ -210,31 +210,31 @@
             },
         }).encode("oX7Lfr2a7E23p03/CR+/PP+Yv7luE12GhsCWrMFlyOc=");
         
-        document.addEventListener('DOMContentLoaded', function() 
-        {
-            const videoToggle = document.getElementById('videoToggle');
-            const localVideo = document.getElementById('local-video');
-            const status = document.getElementById('status');
+        // document.addEventListener('DOMContentLoaded', function() 
+        // {
+        //     const videoToggle = document.getElementById('videoToggle');
+        //     const localVideo = document.getElementById('local-video');
+        //     const status = document.getElementById('status');
             
-            videoToggle.addEventListener('change', function() 
-            {
-                if (this.checked) 
-                {
-                    localVideo.style.display = 'block';
-                    status.textContent = 'カメラ ON';
-                } else {
-                    localVideo.style.display = 'none';
-                    status.textContent = 'カメラ OFF';
-                }
-            });
-        });
+        //     videoToggle.addEventListener('change', function() 
+        //     {
+        //         if (this.checked) 
+        //         {
+        //             localVideo.style.display = 'block';
+        //             status.textContent = 'カメラ ON';
+        //         } else {
+        //             localVideo.style.display = 'none';
+        //             status.textContent = 'カメラ OFF';
+        //         }
+        //     });
+        // });
         
         
         (async () => {
             const roomnameLabel= document.getElementById('roomname');
             const IDLabel= document.getElementById('ID');
             const statusLabel= document.getElementById('status-label');
-            const localVideo = document.getElementById('local-video');
+            // const localVideo = document.getElementById('local-video');
             const buttonArea = document.getElementById('button-area');
             const remoteMediaArea = document.getElementById('remote-media-area');
             const dataStreamInput = document.getElementById('data-stream');
@@ -246,11 +246,12 @@
             //通話人数カウンター
             var Members = 1;
             const Memberselem = document.getElementById("Members");
-            const { audio } = await SkyWayStreamFactory.createMicrophoneAudioStream();
+            const audio = await SkyWayStreamFactory.createMicrophoneAudioStream();
             joinButton.onclick = async () => {
                 statusLabel.textContent = "発信中...";
-                
+
                 const context = await SkyWayContext.Create(token);
+
                 const channel = await SkyWayRoom.FindOrCreate(context, {
                     type: 'p2p',
                     name: roomnameLabel.textContent,
@@ -258,11 +259,8 @@
                     video : false
                 });
                 const me = await channel.join();
-                
                 Memberselem.textContent = Members + "人";
-                
                 await me.publish(audio);
-                
                 const subscribeAndAttach = async (publication) => {
                     if (publication.publisher.id === me.id) return;
                     const { stream } = await me.subscribe(publication.id);
@@ -277,10 +275,9 @@
                     {
                         statusLabel.textContent = "通話中";
                     }
-                };                                        
+                };                      
                 channel.publications.forEach(subscribeAndAttach);
                 channel.onStreamPublished.add((e) => subscribeAndAttach(e.publication));
-                
                 me.onPublicationUnsubscribed.add(() => 
                 {
                     Members = Members -2;
